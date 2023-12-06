@@ -194,7 +194,7 @@ def api_login():
 
 @app.route('/api/register')
 def api_register():
-    # Sama kek atas, tapi data yang dimasukkan name, email, mobileNum, password, isAdmin. isAdmin nilai nya false, sisanya dari form
+    # Copy aja register/sign up dari project lama, tapi data yang dimasukkan name, email, mobileNum, password, isAdmin. isAdmin nilai nya false, sisanya dari form
     return
 
 @app.route('/api/update_user')
