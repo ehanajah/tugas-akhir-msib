@@ -178,8 +178,19 @@ def admin_course_detail(id):
 
 @app.route('/api/login')
 def api_login():
-    # Copy paste aja dari project sebelumnya, ganti username/id jadi email
-    return
+    email = request.form["email"]
+    password = request.form["password"]
+    pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    
+    result = db.users.find_one({"email": email, "password": pw_hash})
+
+    if result:
+        payload = {"id": email, "exp": datetime.utcnow() + timedelta(seconds=60 * 60 * 24),}
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
+        return jsonify({"result": "success", "token": token})
+    else:
+        return jsonify({"result": "fail", "msg": "We could not find a user with that id/password combination"})
 
 @app.route('/api/register')
 def api_register():
