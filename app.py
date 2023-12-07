@@ -119,7 +119,8 @@ def admin_dashboard():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
 
         return render_template("admin/index.html", user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -133,7 +134,8 @@ def registrant():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
 
         # Ambil semua data registrasi("registrations") dari database, masukkan data ke variabel "registrations", dan sertakan variabel ke dalam render template (_id jadikan str)
         # Tambahkan atribut "name" dan course name di setiap data dalam variabel registrations serta hapus atribut courseId
@@ -152,7 +154,8 @@ def admin_courses():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
 
         # Ambil semua data course("courses") dari database, masukkan data ke variabel "courses", dan sertakan variabel ke dalam render template (_id jadikan str)
 
@@ -168,7 +171,8 @@ def admin_course_detail(id):
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
 
         # Cari course("courses") berdasarkan id yang didapat, masukkan data ke variabel "course", dan sertakan variabel ke dalam render template (_id jadikan str)
 
@@ -300,7 +304,8 @@ def accept_registration():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
         
         # Dapatkan data id registration dari form
         # Update atribut status menjadi accepted
@@ -324,7 +329,8 @@ def reject_registration():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
         
         # Dapatkan data id registration dari form
         # Update atribut status menjadi rejected
@@ -348,7 +354,8 @@ def add_course():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
         
         # Dapatkan data name, desc, duration, dan price dari form
         # Buat variabel slug yang berisi value name dengan karakter spasi yang sudah diubah menjadi "-" (contoh "kursus persiapan toefl" jadi "kursus-persiapan-toefl")
@@ -368,7 +375,8 @@ def update_course():
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        # Cek atribut isAdmin pada variabel user_info, kalau bernilai false return redirect ke home
+        if user_info["isAdmin"]:
+            return redirect(url_for("home"))
         
         # Dapatkan data id course, name, desc, duration, price dari form
         # Buat variabel slug yang berisi value name dengan karakter spasi yang sudah diubah menjadi "-"
