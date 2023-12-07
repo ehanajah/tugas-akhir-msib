@@ -180,7 +180,7 @@ def admin_course_detail(id):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template("index.html")
 
-@app.route('/api/login')
+@app.route('/api/login', methods=['POST'])
 def api_login():
     email = request.form["email"]
     password = request.form["password"]
@@ -196,12 +196,12 @@ def api_login():
     else:
         return jsonify({"result": "fail", "msg": "We could not find a user with that id/password combination"})
 
-@app.route('/api/register')
+@app.route('/api/register', methods=['POST'])
 def api_register():
     # Copy aja register/sign up dari project lama, tapi data yang dimasukkan name, email, mobileNum, password, isAdmin. isAdmin nilai nya false, sisanya dari form
     return
 
-@app.route('/api/update_user')
+@app.route('/api/update_user', methods=['POST'])
 def update_user():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -219,7 +219,7 @@ def update_user():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/register_course')
+@app.route('/api/register_course', methods=['POST'])
 def register_course():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -242,7 +242,7 @@ def register_course():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/upload_payment')
+@app.route('/api/upload_payment', methods=['POST'])
 def upload_payment():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -262,7 +262,7 @@ def upload_payment():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/get_notifications')
+@app.route('/api/get_notifications', methods=['GET'])
 def get_notifications():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -279,7 +279,7 @@ def get_notifications():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/update_status_notification')
+@app.route('/api/update_status_notification', methods=['POST'])
 def update_status_notification():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -296,7 +296,7 @@ def update_status_notification():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/accept_registration')
+@app.route('/api/accept_registration', methods=['POST'])
 def accept_registration():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -321,7 +321,7 @@ def accept_registration():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/reject_registration')
+@app.route('/api/reject_registration', methods=['POST'])
 def reject_registration():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -346,7 +346,7 @@ def reject_registration():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/add_course')
+@app.route('/api/add_course', methods=['POST'])
 def add_course():
     token_receive = request.cookies.get("mytoken")
     try:
@@ -367,7 +367,7 @@ def add_course():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="There was problem logging you in"))
 
-@app.route('/api/update_course')
+@app.route('/api/update_course', methods=['POST'])
 def update_course():
     token_receive = request.cookies.get("mytoken")
     try:
