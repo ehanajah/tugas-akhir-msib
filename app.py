@@ -2,6 +2,7 @@ import jwt
 import datetime
 import hashlib
 import os
+from bson import ObjectId
 from os.path import join, dirname
 from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request, redirect, url_for
@@ -303,19 +304,30 @@ def accept_registration():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
 
         user_info = db.users.find_one({"email": payload["id"]})
-
         if user_info["isAdmin"]:
             return redirect(url_for("home"))
         
-        # Dapatkan data id registration dari form
-        # Update atribut status menjadi accepted
-
-        # Buat variabel notification dengan atribut userId, message, dan isRead. userId didapat dari form, message berisi "Pendaftaran anda telah disetujui" dan isRead bernilai false
-        # Masukkan variabel notification ke database("notifications")
+        # Data yang diterima dari form adalah registrationId dan userId
         
-        # Return pesan success
+        id = request.form.get("id")
+        new_status = {"$set": {"status": "accepted"}}
 
-        return 
+        result = db.registrations.update_one({"_id": ObjectId(id)}, new_status)
+        if result.matched_count <= 0:
+            return jsonify({"result": "fail", "msg": "Update failed",})
+
+        userId = request.form.get("userId")
+        message = "Pendaftaran anda telah disetujui"
+        isRead = False
+        
+        notifications = {
+            "userId": userId,
+            "message": message,
+            "isRead": isRead,
+        }
+        db.notifications.insert_one(notifications)
+
+        return jsonify({"result": "success", "msg": "Data updated, registration accepted",})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="Your token has expired"))
     except jwt.exceptions.DecodeError:
@@ -328,19 +340,30 @@ def reject_registration():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
 
         user_info = db.users.find_one({"email": payload["id"]})
-
         if user_info["isAdmin"]:
             return redirect(url_for("home"))
         
-        # Dapatkan data id registration dari form
-        # Update atribut status menjadi rejected
-
-        # Buat variabel notification dengan atribut userId, message, dan isRead. userId didapat dari form, message berisi "Pendaftaran anda ditolak" dan isRead bernilai false
-        # Masukkan variabel notification ke database("notifications")
+        # Data yang diterima dari form adalah id registration dan userId
         
-        # Return pesan success
+        id = request.form.get("id")
+        new_status = {"$set": {"status": "rejected"}}
 
-        return 
+        result = db.registrations.update_one({"_id": ObjectId(id)}, new_status)
+        if result.matched_count <= 0:
+            return jsonify({"result": "fail", "msg": "Update failed",})
+
+        userId = request.form.get("userId")
+        message = "Pendaftaran anda ditolak"
+        isRead = False
+        
+        notifications = {
+            "userId": userId,
+            "message": message,
+            "isRead": isRead,
+        }
+        db.notifications.insert_one(notifications)
+
+        return jsonify({"result": "success", "msg": "Data updated, registration rejected",})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="Your token has expired"))
     except jwt.exceptions.DecodeError:
@@ -357,11 +380,28 @@ def add_course():
         if user_info["isAdmin"]:
             return redirect(url_for("home"))
         
-        # Dapatkan data name, desc, duration, dan price dari form
-        # Buat variabel slug yang berisi value name dengan karakter spasi yang sudah diubah menjadi "-" (contoh "kursus persiapan toefl" jadi "kursus-persiapan-toefl")
-        # Masukkan semua data ke dalam variabel course dan insert ke dalam database("courses")
+        # Data yang diterima dari form adalah name, desc, duration, dan price
+        
+        name = request.form.get("name")
+        desc = request.form.get("desc")
+        duration = request.form.get("duration")
+        price = request.form.get("price")
+        slug = name.replace(" ", "-")
+        
+        doc = {
+            "name": name,
+            "slug": slug,
+            "desc": desc,
+            "duration": duration,
+            "price": price,
+        }
 
-        return 
+        result = db.courses.insert_one(doc)
+
+        if result:
+            return jsonify({"result": "success", "msg": "Course added successfully",})
+        
+        return jsonify({"result": "fail", "msg": "Update failed",})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="Your token has expired"))
     except jwt.exceptions.DecodeError:
@@ -378,11 +418,28 @@ def update_course():
         if user_info["isAdmin"]:
             return redirect(url_for("home"))
         
-        # Dapatkan data id course, name, desc, duration, price dari form
-        # Buat variabel slug yang berisi value name dengan karakter spasi yang sudah diubah menjadi "-"
-        # Update course dengan data yang telah didapat pada data yang memiliki id yang sama dengan id course yang didapat
+        # Data yang diterima darir form adalah id course, name, desc, duration, price dari form
 
-        return 
+        id = request.form.get("id")
+        name = request.form.get("name")
+        desc = request.form.get("desc")
+        duration = request.form.get("duration")
+        price = request.form.get("price")
+        slug = name.replace(" ", "-")
+        
+        new_status = {"$set": {
+            "name": name,
+            "slug": slug,
+            "desc": desc,
+            "duration": duration,
+            "price": price,
+        }}
+
+        result = db.courses.update_one({"_id": ObjectId(id)}, new_status)
+        if result:
+            return jsonify({"result": "success", "msg": "Course updated",})
+        
+        return jsonify({"result": "fail", "msg": "Update failed",})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="Your token has expired"))
     except jwt.exceptions.DecodeError:
