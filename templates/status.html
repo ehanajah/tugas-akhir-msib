@@ -1,12 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Academy | Home</title>
-</head>
-<body>
+    <title>English Academy | Order Status</title>
+
+    <!-- bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <link href="../static/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">English Academy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="#">Courses</a>
+                        </li>
+                </div>
+            </div>
+
+            <div id="notif">
+                <div class="dropdown-center">
+                    <a class="link-dark mx-2 text-decoration-none" href="#" aria-label="Akun" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor"
+                            class="bi bi-person" viewBox="0 0 16 16">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-4" style="left: inherit; right: 0px;"
+                        id="notifications">
+                        <a class="dropdown-item" href="#">My Account</a>
+                        <a class="dropdown-item" href="#">My Orders</a>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item px-3" href="#">Logout</a>
+                    </div>
+                    <a class="link-dark mx-2" href="#" aria-label="Akun" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-bell" viewBox="0 0 16 16">
+                            <path
+                                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-4" style="left: inherit; right: 0px;"
+                        id="notifications">
+                        <p class="dropdown-item">Notifications</p>
+                        <div class="dropdown-divider"></div>
+                        <div id="notification-drop-down">
+                            <a href="#" class="dropdown-item">
+                                <div class="media">
+                                    <p class="text-sm"><b>Call me whenever you can...</b></p>
+                                </div>
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <div class="media">
+                                    <p class="text-sm">Call me whenever you can...</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">Clear Notifications</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="login-button">Login</a>
+            <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <section id="content" class="mt-5 pt-5 container">
+        <div class="mt-3">
+            <div class="sticky-top px-3 pb-3 my-auto">
+                <h4>Status Pembayaran</h4>
+                <hr class="mt-4 col-md-3 col">
+            </div>
+        </div>
+        <div class="mt-3 bg-success py-4 px-3 rounded" style="--bs-bg-opacity: .1;">
+            <h5 class="pb-3">Nomor Rekening: 0xxxxxxx</h5>
+            <div style="overflow-x:auto;">
+                <table class="table table-success table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Program</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Skema Pembelajaran</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Bukti Pembayaran</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Mark</th>
+                            <td>Program 1</td>
+                            <td>Menunggu Acc</td>
+                            <td>Online</td>
+                            <td>Rp. 999.999</td>
+                            <td><a href="">upload</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="pt-5 text-end">Harap lakukan pembayaran maksimal 24 jam setelah pendaftaran.</p>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
