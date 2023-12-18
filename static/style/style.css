@@ -15,6 +15,7 @@
 
 .login-button:hover {
     background-color: #00b383;
+    color: white;
 }
 
 .navbar-toggler {
@@ -46,6 +47,16 @@
     color: #000;
 }
 
+.accbtn {
+    background-color: #009970;
+    color: white;
+}
+
+.accbtn:hover {
+    background-color: #00b383;
+    color: white;
+}
+
 @media (min-width: 992px) {
     .nav-link::before {
             content: "";
@@ -74,7 +85,7 @@
 
 /*-----hero-section------*/
 .hero-section {
-    background: url(12.jpg) no-repeat center;
+    background: url(../img/12.jpg) no-repeat center;
     background-size: cover;
     width: 100%;
     height: 100vh;
@@ -110,13 +121,59 @@
     text-align: center;
 }
 
-.btn.btn-primary.btn-lg {
+.btn.btn-success {
+    background-color: #009970;
+    color: #fff;
     font-size: 1.5rem;
-    margin-top: 20px;
+    padding: 15px 30px;
+    border-radius: 70px;
+    text-decoration: none;
+    transition: 0.3s background-color;
 }
-
+.btn.btn-success:hover {
+    background-color: #00b383;
+}
 /*-----End hero-section------*/
+
+/*---about-section----*/
 
 .about-img {
     margin-top: 50px;
 }
+
+/*-----end about section-----*/
+
+/*-----Courses section-----*/
+.card-body{
+    padding: 25px;
+    margin-top: 15px;
+}
+.detail-button {
+    background-color: #009970;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+    margin-right: 30px;
+}
+
+.detail-button:hover {
+    background-color: #00b383;
+}
+
+.more-button {
+    background-color: #009970;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+}
+
+.more-button:hover {
+    background-color: #00b383;
+}
+/*-----end courses section-----*/

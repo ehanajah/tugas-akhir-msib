@@ -26,13 +26,15 @@ db = client[DB_NAME]
 @app.route('/')
 def home():
     token_receive = request.cookies.get("token")
+    courses = list(db.courses.find().limit(3))
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
 
         user_info = db.users.find_one({"email": payload["id"]})
-        return render_template("index.html", user_info=user_info)
+        
+        return render_template("index.html", user_info=user_info, courses=courses)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template("index.html")
+        return render_template("index.html", courses=courses)
 
 @app.route('/about')
 def about():
@@ -48,31 +50,31 @@ def about():
 @app.route('/courses')
 def courses():
     token_receive = request.cookies.get("token")
+    courses = list(db.courses.find())
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
 
         user_info = db.users.find_one({"email": payload["id"]})
         
-        # Ambil semua data courses("courses") dari database, masukkan data ke variabel "courses", dan sertakan variabel ke dalam render template (_id jadikan str)
         courses = db.courses.find()
 
         return render_template("courses.html", user_info=user_info, courses=courses)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template("courses.html")
+        return render_template("courses.html", courses=courses)
 
 @app.route('/courses/<slug>')
 def course(slug):
     token_receive = request.cookies.get("token")
+    course = db.courses.find_one({"slug": slug})
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
 
         user_info = db.users.find_one({"email": payload["id"]})
-        
-        # Cari course("courses") berdasarkan slug yang didapat, masukkan data ke variabel "course", dan sertakan variabel ke dalam render template (_id jadikan str)
+        course["id"] = str(course["_id"])
 
-        return render_template("detail-course.html", user_info=user_info)
+        return render_template("detail-course.html", user_info=user_info, course=course)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template("detail-course.html")
+        return render_template("detail-course.html", course=course)
 
 @app.route('/status')
 def status():
@@ -85,9 +87,19 @@ def status():
         
         # Cari statusregistrasi ("registrations") berdasarkan id user(dapat dari user_info di atas), masukkan data ke variabel "status", dan sertakan variabel ke dalam render template (_id jadikan str)
         user_id = user_info["_id"]
-        status = db.registrations.find({"userId": ObjectId(user_id)})
+        statuses = list(db.registrations.find({"userId": str(user_id)}))
+        
+        for status in statuses:
+            status["id"] = str(status["_id"])
 
-        return render_template("status.html", user_info=user_info, msg=msg, status=status)
+            course = db.courses.find_one({"_id": ObjectId(status["courseId"])})
+            courseName = course["name"]
+            coursePrice = course["price"]
+
+            status["courseName"] = courseName
+            status["coursePrice"] = coursePrice
+
+        return render_template("status.html", user_info=user_info, msg=msg, statuses=statuses)
     except jwt.ExpiredSignatureError:
         msg="Your login token has expired"
         response = make_response(redirect(url_for('login')))
@@ -174,15 +186,14 @@ def registrant():
         registrations = list(db.registrations.find())
         
         for registration in registrations:
-            registration["_id"] = str(registration["_id"])
+            registration["id"] = str(registration["_id"])
             
             user = db.users.find_one({"_id": ObjectId(registration["userId"])})
             course = db.courses.find_one({"_id": ObjectId(registration["courseId"])})
-            name = user["name"]
-            courseName = course["name"]
 
-            registration["userName"] = name
-            registration["courseName"] = courseName
+            registration["userName"] = user["name"]
+            registration["mobileNum"] = user["mobileNum"]
+            registration["courseName"] = course["name"]
 
         return render_template("admin/registrant.html", user_info=user_info, registrations=registrations)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -200,6 +211,8 @@ def admin_courses():
             return redirect(url_for("home"))
 
         courses = list(db.courses.find())
+        for course in courses:
+            course["id"] = str(course["_id"])
 
         return render_template("admin/courses.html", user_info=user_info, courses=courses)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -213,10 +226,11 @@ def admin_course_detail(id):
 
         user_info = db.users.find_one({"email": payload["id"]})
 
-        if user_info["isAdmin"]:
+        if not user_info["isAdmin"]:
             return redirect(url_for("home"))
 
         course = db.courses.find_one({"_id": ObjectId(id)})
+        course["id"] = str(course["_id"])
 
         return render_template("admin/detail-course.html", user_info=user_info, course=course)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -293,12 +307,14 @@ def update_user():
 
         user_info = db.users.find_one({"email": payload["id"]})
         
-        # Ambil data dari form dan _id atau email user lalu update data user dengan data yang didapat dari form berdasarkan _id user
         nama = request.form.get("name")
         email = request.form.get("email")
+        mobileNum = request.form.get("mobileNum")
         updated_data = {}
         if nama:
             updated_data["name"] = nama
+        if nama:
+            updated_data["mobileNum"] = mobileNum
         if email != user_info["email"]:
             dupEmail = db.users.find_one({"email": email})
             if dupEmail is not None:
@@ -311,7 +327,8 @@ def update_user():
 
         db.users.update_one({"_id": user_info["_id"]}, {"$set": updated_data})
         if "email" in updated_data:
-            new_token = jwt.encode({"id": updated_data["email"]}, SECRET_KEY, algorithm="HS256")
+            payload = {"id": email, "exp": datetime.utcnow() + timedelta(seconds=60 * 60 * 24),}
+            new_token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
             msg="User updated successfully"
             response = make_response(redirect(url_for("user_info")))
             response.set_cookie("token", new_token)
@@ -350,6 +367,12 @@ def register_course():
         insertedAt = request.form.get("insertedAt")
         payment = ""
         status = "waiting"
+
+        if learningScheme == "offline" and location == "":
+            response = make_response(jsonify({"result": "fail"}))
+            msg = "Pendaftaran gagal dibuat. Masukkan lokasi kursus!"
+            response.set_cookie("msg", msg)
+            return response
         
         registration = {
             "userId": userId,
@@ -362,7 +385,7 @@ def register_course():
         }
 
         result = db.registrations.insert_one(registration)
-        if result.matched_count <= 0:
+        if result:
             response = make_response(jsonify({"result": "fail"}))
             msg = "Pendaftaran gagal dibuat"
             response.set_cookie("msg", msg)
@@ -398,13 +421,11 @@ def upload_payment():
     token_receive = request.cookies.get("token")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-
-        user_info = db.users.find_one({"email": payload["id"]})
         
         registration_id = request.form.get("registration_id")
         payment_file = request.files.get("paymentFile")
         unique_filename = str(uuid.uuid4()) + os.path.splitext(payment_file.filename)[1]
-        save_to = f'static/{unique_filename}'
+        save_to = f'static/payment_files/{unique_filename}'
         payment_file.save(save_to)
 
         result = db.registrations.update_one({"_id": ObjectId(registration_id)}, {"$set": {"payment": unique_filename}})
@@ -435,13 +456,12 @@ def get_notifications():
     token_receive = request.cookies.get("token")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-
-        user_info = db.users.find_one({"email": payload["id"]})
         
-        notifications = db.notifications.find({"userId": str(user_info["_id"])})
-        notifications_list = list(notifications)
+        notifications = list(db.notifications.find({"userId": str(user_info["_id"])}))
+        for notification in notifications:
+            notification["_id"] = str(notification["_id"])
 
-        return jsonify({"result": "success", "msg": "Notifications retrieved successfully", "notifications": notifications_list})
+        return jsonify({"result": "success", "notifications": notifications})
     except jwt.ExpiredSignatureError:
         msg="Your login token has expired"
         response = make_response(redirect(url_for('login')))
@@ -458,8 +478,6 @@ def update_status_notification():
     token_receive = request.cookies.get("token")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-
-        user_info = db.users.find_one({"email": payload["id"]})
         
         notification_id = request.form.get("notification_id")
         notification = db.notifications.find_one({"_id": ObjectId(notification_id)})
@@ -490,20 +508,18 @@ def accept_registration():
         if not user_info["isAdmin"]:
             return redirect(url_for("home"))
         
-        # Data yang diterima dari form adalah registrationId dan userId
-        
         id = request.form.get("id")
         new_status = {"$set": {"status": "accepted"}}
 
         result = db.registrations.update_one({"_id": ObjectId(id)}, new_status)
         if result.matched_count <= 0:
-            response = make_response(jsonify({"status": "failed"}))
+            response = make_response(jsonify({"status": "fail"}))
             msg = "Update failed"
             response.set_cookie("msg", msg)
             return response
 
         userId = request.form.get("userId")
-        message = "Pendaftaran anda telah disetujui"
+        message = "Pendaftaran anda telah disetujui. Silahkan periksa WhatsApp untuk informasi lebih lanjut"
         isRead = False
         
         notifications = {
@@ -514,7 +530,7 @@ def accept_registration():
         db.notifications.insert_one(notifications)
 
         response = make_response(jsonify({"status": "success"}))
-        msg = "Data updated, registration accepted"
+        msg = "Data updated. Registration accepted"
         response.set_cookie("msg", msg)
         return response
     except jwt.ExpiredSignatureError:
@@ -538,14 +554,12 @@ def reject_registration():
         if not user_info["isAdmin"]:
             return redirect(url_for("home"))
         
-        # Data yang diterima dari form adalah id registration dan userId
-        
         id = request.form.get("id")
         new_status = {"$set": {"status": "rejected"}}
 
         result = db.registrations.update_one({"_id": ObjectId(id)}, new_status)
         if result.matched_count <= 0:
-            response = make_response(jsonify({"status": "failed"}))
+            response = make_response(jsonify({"status": "fail"}))
             msg = "Update failed"
             response.set_cookie("msg", msg)
             return response
@@ -562,7 +576,7 @@ def reject_registration():
         db.notifications.insert_one(notifications)
 
         response = make_response(jsonify({"status": "success"}))
-        msg = "Data updated, registration rejected"
+        msg = "Data updated. Registration rejected"
         response.set_cookie("msg", msg)
         return response
     except jwt.ExpiredSignatureError:
@@ -591,6 +605,7 @@ def add_course():
         
         name = request.form.get("name")
         desc = request.form.get("desc")
+        longDesc = request.form.get("longDesc")
         duration = request.form.get("duration")
         price = request.form.get("price")
         slug = name.replace(" ", "-")
@@ -599,19 +614,20 @@ def add_course():
             "name": name,
             "slug": slug,
             "desc": desc,
+            "longDesc": longDesc,
             "duration": duration,
             "price": price,
         }
 
         result = db.courses.insert_one(doc)
 
-        if result.matched_count <= 0:
-            response = make_response(jsonify({"status": "success"}))
+        if result:
+            response = make_response(redirect(url_for('admin_courses')))
             msg = "Course added successfully"
             response.set_cookie("msg", msg)
             return response
         
-        response = make_response(jsonify({"status": "fail"}))
+        response = make_response(redirect(url_for('admin_courses')))
         msg = "Update failed"
         response.set_cookie("msg", msg)
         return response
@@ -636,12 +652,11 @@ def update_course():
 
         if not user_info["isAdmin"]:
             return redirect(url_for("home"))
-        
-        # Data yang diterima darir form adalah id course, name, desc, duration, price dari form
 
         id = request.form.get("id")
         name = request.form.get("name")
         desc = request.form.get("desc")
+        longDesc = request.form.get("longDesc")
         duration = request.form.get("duration")
         price = request.form.get("price")
         slug = name.replace(" ", "-")
@@ -650,6 +665,7 @@ def update_course():
             "name": name,
             "slug": slug,
             "desc": desc,
+            "longDesc": longDesc,
             "duration": duration,
             "price": price,
         }}
@@ -676,7 +692,7 @@ def update_course():
         response.set_cookie("msg", msg)
         return response
     
-@app.route('/delete_notifications', methods=['POST'])
+@app.route('/api/delete_notifications', methods=['POST'])
 def delete_notifications():
     token_receive = request.cookies.get("token")
     try:

@@ -2,142 +2,319 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>English Academy</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>English Academy</title>
 
-  <!-- bootstrap CSS-->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <!-- bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 
-  <!-- JS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-  <link href="../static/style.css" rel="stylesheet" />
+    <link href="../static/style/style.css" rel="stylesheet" />
+
 </head>
 
 <body>
-  <!--Navbar-->
-  <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">English Academy</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link mx-lg-2 active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="#">Courses</a>
-            </li>
-        </div>
-      </div>
-
-      <div id="notif">
-        <div class="dropdown-center">
-          <a class="link-dark mx-2 text-decoration-none" href="#" aria-label="Akun" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-person"
-              viewBox="0 0 16 16">
-              <path
-                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
-            </svg>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right mt-4" style="left: inherit; right: 0px;" id="notifications">
-            <a class="dropdown-item" href="#">My Account</a>
-            <a class="dropdown-item" href="#">My Orders</a>
-            <hr class="dropdown-divider">
-            <a class="dropdown-item px-3" href="#">Logout</a>
-          </div>
-          <a class="link-dark mx-2" href="#" aria-label="Akun" data-bs-toggle="dropdown" aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell"
-              viewBox="0 0 16 16">
-              <path
-                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
-            </svg>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right mt-4" style="left: inherit; right: 0px;" id="notifications">
-            <p class="dropdown-item">Notifications</p>
-            <div class="dropdown-divider"></div>
-            <div id="notification-drop-down">
-              <a href="#" class="dropdown-item">
-                <div class="media">
-                  <p class="text-sm"><b>Call me whenever you can...</b></p>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg fixed-top border-bottom">
+        <div class="container">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">English Academy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-              </a>
-              <a href="#" class="dropdown-item">
-                <div class="media">
-                  <p class="text-sm">Call me whenever you can...</p>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="/about">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="/courses">Courses</a>
+                        </li>
                 </div>
-              </a>
             </div>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer">Clear Notifications</a>
-          </div>
-        </div>
-      </div>
 
-      <a href="#" class="login-button">Login</a>
-      <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-        aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </nav>
-  <!--End Navbar-->
+            {% if user_info %}
+            <div id="notif" class="me-5">
+                <div class="dropdown-center me-4">
+                    <a class="link-dark mx-2 text-decoration-none" href="#" aria-label="Akun" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor"
+                            class="bi bi-person" viewBox="0 0 16 16">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-4" id="notifications">
+                        <a class="dropdown-item" href="/user_info">My Account</a>
+                        <a class="dropdown-item" href="/status">My Orders</a>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item px-3" onclick="logout()" style="cursor: pointer;">Logout</a>
+                    </div>
+                    <a class="link-dark mx-2" href="#" aria-label="Akun" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-bell" viewBox="0 0 16 16">
+                            <path
+                                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-4" id="notifications">
+                        <p class="dropdown-item">Notifications</p>
+                        <div class="dropdown-divider"></div>
+                        <div id="notification-drop-down">
+                            <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal"
+                                data-bs-target="#notifModal">
+                                <div class="media">
+                                    <p class="text-sm"><b>Call me whenever you can...</b></p>
+                                </div>
+                            </a>
+                            <a class="dropdown-item" style="cursor: pointer;" data-bs-toggle="modal"
+                                data-bs-target="#notifModal">
+                                <div class="media">
+                                    <p class="text-sm">Call me whenever you can...</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item dropdown-footer" onclick="clearNotifications()"
+                            style="cursor: pointer;">Clear
+                            Notifications</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <a href="/login" class="login-button">Login</a>
+            {% endif %}
 
-  <!--Home section-->
-  <section class="hero-section">
-    <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-column">
-      <h1>
-        English Academy
-      </h1>
-      <p>
-        Di English Academy, kami menyediakan berbagai penawaran pembelajaran Bahasa Inggris yang
-        inovatif, efektif, dan menyenangkan. Apakah Anda seorang pemula yang ingin memulai
-        perjalanan bahasa baru atau seorang profesional yang ingin meningkatkan kemampuan
-        komunikasi global Anda, kami memiliki penawaran kursus yang sesuai untuk Anda.
-      </p>
-      <button class="btn btn-primary btn-lg">
-        Explore Programs
-      </button>
-    </div>
-  </section>
-  <!--End Home Section-->
-  <!--About Section-->
-  <section id="about" class="about section padding">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-12 col-12 ps-lg-5 mt-md-5">
-          <div class="about-text">
-            <h2>Selamat datang di English Academy</h2>
-            <p>Mulailah perjalanan pembelajaran bahasa transformatif dengan English Academy. English Academy dirancang
-              untuk memberi Anda pengalaman yang lancar dan menarik saat Anda menjelajahi dan mendaftar untuk beragam
-              kursus bahasa Inggris yang ada disekitar tempat tinggal Anda. Jelajahi penawaran kursus dari English
-              Academy, pilih salah satu yang sesuai dengan tujuan Anda, dan selesaikan proses pendaftaran yang mudah di
-              English Academy. Bergabunglah dengan komunitas peminat bahasa dan selangkah lebih dekat untuk menguasai
-              bahasa Inggris.</p>
-          </div>
+            <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-        <div class="col-lg-4 col-md-12 col-12">
-          <div class="about-img">
-            <img src="../static/about.jpg" alt="" class="img-fluid">
-          </div>
+    </nav>
+    <!--End Navbar-->
+
+    <!--Home section-->
+    <section class="hero-section">
+        <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-column">
+            <h1>
+                English Academy
+            </h1>
+            <p>
+                Di English Academy, kami menyediakan berbagai penawaran pembelajaran Bahasa Inggris yang
+                inovatif, efektif, dan menyenangkan. Apakah Anda seorang pemula yang ingin memulai
+                perjalanan bahasa baru atau seorang profesional yang ingin meningkatkan kemampuan
+                komunikasi global Anda, kami memiliki penawaran kursus yang sesuai untuk Anda.
+            </p>
+            <a href="/courses" type="button" class="btn btn-success">Explore Programs</a>
         </div>
-      </div>
+    </section>
+    <!--End Home Section-->
+    <!--About Section-->
+    <section id="about" class="about section padding my-5">
+        <div class="container py-5">
+            <div class="row mb-4">
+                <div class="col-lg-6 col-md-12 col-12 ps-lg-5 mt-md-5 me-auto">
+                    <div class="about-text">
+                        <h2 class="mb-4" style="margin-top: 30px;">Selamat datang di English Academy</h2>
+                        <p>Mulailah perjalanan pembelajaran bahasa transformatif dengan English Academy. English Academy
+                            dirancang
+                            untuk memberi Anda pengalaman yang lancar dan menarik saat Anda menjelajahi dan mendaftar
+                            untuk beragam
+                            kursus bahasa Inggris yang ada disekitar tempat tinggal Anda. Jelajahi penawaran kursus dari
+                            English
+                            Academy, pilih salah satu yang sesuai dengan tujuan Anda, dan selesaikan proses pendaftaran
+                            yang mudah di
+                            English Academy. Bergabunglah dengan komunitas peminat bahasa dan selangkah lebih dekat
+                            untuk menguasai
+                            bahasa Inggris.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12 col-12">
+                    <div class="about-img">
+                        <img src="../static/img/about.jpg" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End About Section-->
+
+    <!--Courses Section-->
+    <section id="courses" class="courses section-padding mt-4 pb-3" style="background-color: rgba(69, 149, 120, 0.352)">
+        <div class="container py-5">
+            <h1 class="text-center">Courses</h1>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 py-5 mx-auto px-lg-5" id="couse-container">
+
+                <!-- Kotak Pertama -->
+                {% for course in courses %}
+                <div class="col">
+                    <div class="card mx-auto" style="width: 18rem; min-height: 24rem;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">{{ course.name }}</h5>
+                            <p class="card-text">{{ course.desc }}</p>
+                        </div>
+                        <div class="d-flex justify-content-end mb-3">
+                            <a href="/courses/{{ course.slug }}" class="detail-button mb-3">Detail</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="d-flex justify-content-center mb-5">
+            <a href="/courses" class="more-button">Explore More</a>
+        </div>
+    </section>
+    <!--End Courses Section-->
+
+    <!--Testimonial Section-->
+    <section class="testimonial" id="testimonial">
+        <div class="container py-5">
+            <h1 class="text-center mb-4">Testimoni</h1>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 py-5">
+                <div class="col">
+                    <div class="card bg-white pb-2">
+                        <div class="card-body">
+                            <p class="card-text text-center">"Saya sangat senang menemukan web pendaftaran ini! Proses
+                                pendaftarannya
+                                sangat mudah dan intuitif. Semua informasi yang saya butuhkan tentang kursus-kursus yang
+                                ditawarkan
+                                jelas terpampang di halaman depan."</p>
+                            <h5 class="card-title text-center font-italic">- Sarah Thompson</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card bg-white pb-2">
+                        <div class="card-body">
+                            <p class="card-text text-center">"Saya sangat senang menemukan web pendaftaran ini! Proses
+                                pendaftarannya
+                                sangat mudah dan intuitif. Semua informasi yang saya butuhkan tentang kursus-kursus yang
+                                ditawarkan
+                                jelas terpampang di halaman depan."</p>
+                            <h5 class="card-title text-center font-italic">- Sarah Thompson</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card bg-white pb-2">
+                        <div class="card-body">
+                            <p class="card-text text-center">"Saya sangat senang menemukan web pendaftaran ini! Proses
+                                pendaftarannya
+                                sangat mudah dan intuitif. Semua informasi yang saya butuhkan tentang kursus-kursus yang
+                                ditawarkan
+                                jelas terpampang di halaman depan."</p>
+                            <h5 class="card-title text-center font-italic">- Sarah Thompson</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card bg-white pb-2">
+                        <div class="card-body">
+                            <p class="card-text text-center">"Saya sangat senang menemukan web pendaftaran ini! Proses
+                                pendaftarannya
+                                sangat mudah dan intuitif. Semua informasi yang saya butuhkan tentang kursus-kursus yang
+                                ditawarkan
+                                jelas terpampang di halaman depan."</p>
+                            <h5 class="card-title text-center font-italic">- Sarah Thompson</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End testimonial Section-->
+    <!--Footer Section-->
+    <section id="footer" style="background-color: silver">
+        <div class="container">
+            <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 mt-5 border-top">
+                <div class="col mb-3">
+                    <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+                        <h3>English Academy</h3>
+                    </a>
+                    <p class="text-body-secondary">© 2023</p>
+                </div>
+
+                <div class="col mb-3">
+
+                </div>
+
+                <div class="col mb-3">
+                    <h5>Payment</h5>
+                    <ul>
+                        <p>
+                            <img src="{{ url_for('static', filename='img/bca.png') }}" alt=""
+                                style="width: 50px; height: auto;">
+                        <p>
+                        <p>
+                            <img src="{{ url_for('static', filename='img/bri.png') }}" alt=""
+                                style="width: auto; height: 40px;">
+                        <p>
+                        <p>
+                            <img src="{{ url_for('static', filename='img/bni.png') }}" alt=""
+                                style="width: 50px; height: auto;">
+                        <p>
+                        <p>
+                            <img src="{{ url_for('static', filename='img/mandiri.png') }}" alt=""
+                                style="width: 50px; height: auto;">
+                        <p>
+                    </ul>
+                </div>
+
+                <div class="col mb-3">
+                    <h5>Helpfull Links</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Service</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Support</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Tems &
+                                Condition</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Privacy
+                                Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="col mb-3">
+                    <h5>Main Office</h5>
+                    <p>Jl Timbangan, Sumatera Selatan</p>
+                </div>
+            </footer>
+        </div>
+    </section>
+    <!--End Footer Section-->
+
+    <!-- Modal Notif -->
+    <div class="modal fade" id="notifModal" tabindex="-1" aria-labelledby="notifModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="notifModalLabel">Notifikasi</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </section>
-  <!--End About Section-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
+    <!-- End Modal Notif -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='script/script.js') }}"></script>
 </body>
 
 </html>
