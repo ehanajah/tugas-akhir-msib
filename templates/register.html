@@ -20,7 +20,7 @@
 
 <body>
     <div class="wrapper mx-2">
-        <form action="">
+        <form action="/api/register" method="post">
             <h1>Register</h1>
             <div id="alertContainer" class="mt-4">
                 <div class="alert alert-dark alert-dismissible fade show" role="alert">
@@ -29,28 +29,28 @@
                 </div>
             </div>
             <div class="input-box">
-                <input type="text" placeholder="Masukkan Nama" required />
+                <input type="text" placeholder="Masukkan Nama" name="name" required />
                 <i class='bx bxs-user-circle'></i>
             </div>
             <div class="input-box">
-                <input type="number" placeholder="Masukkan Nomor Telepon" required />
+                <input type="number" placeholder="Masukkan Nomor Telepon" name="mobileNum" required />
                 <i class='bx bx-phone'></i>
             </div>
             <div class="input-box">
-                <input type="email" placeholder="Masukkan Alamat Email" required />
+                <input type="email" placeholder="Masukkan Alamat Email" name="email" required />
                 <i class="bx bx-envelope"></i>
             </div>
             <div class="input-box">
-                <input type="password" placeholder="Masukkan Password" required />
+                <input type="password" placeholder="Masukkan Password" name="password" required />
                 <i class="bx bxs-lock-alt"></i>
             </div>
             <div class="input-box">
-                <input type="password" placeholder="Masukkan Konfirmasi Password" required />
+                <input type="password" placeholder="Masukkan Konfirmasi Password" name="passwordConf" required />
                 <i class="bx bx-lock-alt"></i>
             </div>
-            <button type="button" class="btn">Register</button>
+            <button type="submit" class="btn">Register</button>
             <div class="register-link">
-                <p>Have an account? <a href="#">Login</a></p>
+                <p>Have an account? <a href="/login">Login</a></p>
             </div>
         </form>
     </div>

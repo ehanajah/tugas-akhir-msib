@@ -7,7 +7,7 @@ function accept_registration(id, userId) {
             userId: userId,
         },
         success: function (data) {
-            console.log(data);
+            window.location.reload();
         },
         error: function (error) {
             console.log(error);
@@ -24,7 +24,7 @@ function reject_registration(id, userId) {
             userId: userId,
         },
         success: function (data) {
-            console.log(data);
+            window.location.reload();
         },
         error: function (error) {
             console.log(error);
