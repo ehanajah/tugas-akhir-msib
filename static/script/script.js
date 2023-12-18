@@ -37,7 +37,7 @@ function formatNum(angka) {
 }
 
 function logout() {
-    $.removeCookie('token');
+    $.removeCookie('token', { path: '/' });
     window.location.href = '/';
 }
 
@@ -52,6 +52,6 @@ function showAlert() {
             </div>
         `;
         $('#alertContainer').append(alertHTML);
-        $.removeCookie('msg');
+        $.removeCookie('msg', { path: '/' });
     }
 }
