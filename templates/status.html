@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="{{ url_for('static', filename='favico.ico') }}" type="image/x-icon" />
+    <meta property="og:title" content="English Academy" />
+    <meta property="og:description" content="English Academy, tempat yang tepat untuk mengembangkan skill Bahasa Inggrismu" />
+    <meta property="og:image" content="{{ url_for('static', filename='ogimage.jpg') }}" />
+    
     <title>English Academy | Order Status</title>
 
     <!-- bootstrap CSS-->
@@ -14,7 +20,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-    <link href="../static/style/style.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='style/style.css') }}" rel="stylesheet" />
 </head>
 
 <body>
@@ -64,24 +70,24 @@
                             <path
                                 d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
                         </svg>
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle p-1 bg-danger border border-light rounded-circle"
+                            id="notification-badge">
+                            <span class="visually-hidden">New alerts</span>
+                        </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right mt-4" id="notifications">
                         <p class="dropdown-item">Notifications</p>
                         <div class="dropdown-divider"></div>
-                        <div id="notification-drop-down">
-                            <a href="#" class="dropdown-item">
-                                <div class="media">
-                                    <p class="text-sm"><b>Call me whenever you can...</b></p>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <div class="media">
-                                    <p class="text-sm">Call me whenever you can...</p>
-                                </div>
-                            </a>
+                        <div id="notification-drop-down" style="width: 230px;">
+                            <div class="media my-5 mx-3">
+                                <p class="text-sm text-truncate text-secondary" style="opacity: 80%;">Tidak ada notifikasi</p>
+                            </div>
                         </div>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">Clear Notifications</a>
+                        <div class="dropdown-divider" id="clearDivider"></div>
+                        <a class="dropdown-item dropdown-footer" id="clearBtn" onclick="clearNotifications()"
+                            style="cursor: pointer;">Clear
+                            Notifications</a>
                     </div>
                 </div>
             </div>
@@ -133,13 +139,17 @@
                             <td>
                                 {% if status.payment %}
                                 <a data-bs-toggle="modal" data-bs-target="#uploadPayment" data-id="{{ status.id }}"
-                                    style="cursor: pointer;">{{
-                                    status.payment }}</a>
+                                    style="cursor: pointer;">
+                                    {{status.payment }}</a>
                                 {% else %}
-                                <a class="btn accbtn" data-bs-toggle="modal" data-bs-target="#uploadPayment"
-                                    data-id="{{ status.id }}" style="cursor: pointer;">
-                                    Upload
-                                </a>
+                                {% if status.status == "rejected" %}
+                                        Pendaftaran anda ditolak
+                                    {% else %}
+                                        <a class="btn accbtn" data-bs-toggle="modal" data-bs-target="#uploadPayment"
+                                            data-id="{{ status.id }}" style="cursor: pointer;">
+                                            Upload
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         </tr>
@@ -221,10 +231,11 @@
                     </div>
                     <div class="modal-body">
                         <input type="text" id="registration_id" name="registration_id" hidden>
-                        <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04"
+                        <div class="input-group my-3">
+                            <input type="file" accept=".jpg,.png,.jpeg" class="form-control" id="inputGroupFile04"
                                 aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="paymentFile" required>
                         </div>
+                        <div id="fileInputHelp" class="form-text">Masukkan file dengan ekstensi jpg, jpeg, dan png.</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -235,10 +246,32 @@
         </div>
     </div>
     <!-- End Modal -->
+    
+    <!-- Modal Notif -->
+    <div class="modal fade" id="notifModal" tabindex="-1" aria-labelledby="notifModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="notifModalLabel">Notifikasi</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body my-3">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Notif -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='script/script.js') }}"></script>
+    {% if user_info %}
+        <script src="{{ url_for('static', filename='script/notification.js') }}"></script>
+    {% endif %}
     <script>
         {% for status in statuses %}
             {% if status and status.courseName %}

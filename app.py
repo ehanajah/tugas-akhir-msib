@@ -1,10 +1,10 @@
 import jwt
 import datetime
 import hashlib
-import os
 import uuid
-from bson import ObjectId
+import os
 from os.path import join, dirname
+from bson import ObjectId
 from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request, redirect, url_for, make_response
 from datetime import datetime, timedelta
@@ -385,7 +385,7 @@ def register_course():
         }
 
         result = db.registrations.insert_one(registration)
-        if result:
+        if not result:
             response = make_response(jsonify({"result": "fail"}))
             msg = "Pendaftaran gagal dibuat"
             response.set_cookie("msg", msg)
@@ -421,11 +421,29 @@ def upload_payment():
     token_receive = request.cookies.get("token")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
+        allowed_extensions = ['.jpg', '.jpeg', '.png']
         
         registration_id = request.form.get("registration_id")
         payment_file = request.files.get("paymentFile")
+
+        file_extension = os.path.splitext(payment_file.filename)[1]
+        if file_extension.lower() not in allowed_extensions:
+            msg="File yang diinputkan tidak"
+            response = redirect(url_for("status"))
+            response.set_cookie("msg", msg)
+            return response
+
         unique_filename = str(uuid.uuid4()) + os.path.splitext(payment_file.filename)[1]
         save_to = f'static/payment_files/{unique_filename}'
+
+        registration = db.registrations.find_one({"_id": ObjectId(registration_id)})
+
+        if registration['payment']:
+            old_payment_file = f'static/payment_files/{registration["payment"]}'
+        
+        if os.path.exists(old_payment_file):
+            os.remove(old_payment_file)
+        
         payment_file.save(save_to)
 
         result = db.registrations.update_one({"_id": ObjectId(registration_id)}, {"$set": {"payment": unique_filename}})
@@ -456,6 +474,8 @@ def get_notifications():
     token_receive = request.cookies.get("token")
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
+
+        user_info = db.users.find_one({"email": payload["id"]})
         
         notifications = list(db.notifications.find({"userId": str(user_info["_id"])}))
         for notification in notifications:
@@ -472,6 +492,7 @@ def get_notifications():
         response = make_response(redirect(url_for('login')))
         response.set_cookie("msg", msg)
         return response
+
 
 @app.route('/api/update_status_notification', methods=['POST'])
 def update_status_notification():
@@ -604,6 +625,13 @@ def add_course():
         # Data yang diterima dari form adalah name, desc, duration, dan price
         
         name = request.form.get("name")
+        dupName = db.courses.find_one({"name": name})
+        if dupName is not None:
+            msg="Course dengan nama teresbut sudah ada. Silahkan masukkan nama lain"
+            response = make_response(redirect(url_for("admin_courses")))
+            response.set_cookie("msg", msg)
+            return response
+        
         desc = request.form.get("desc")
         longDesc = request.form.get("longDesc")
         duration = request.form.get("duration")
@@ -655,6 +683,14 @@ def update_course():
 
         id = request.form.get("id")
         name = request.form.get("name")
+        dupName = db.courses.find_one({"name": name})
+        if dupName is not None:
+            if dupName["_id"] != ObjectId(id):
+                msg="Course dengan nama teresbut sudah ada. Silahkan masukkan nama lain"
+                response = make_response(jsonify({"status": "fail"}))
+                response.set_cookie("msg", msg)
+                return response
+        
         desc = request.form.get("desc")
         longDesc = request.form.get("longDesc")
         duration = request.form.get("duration")
@@ -671,7 +707,7 @@ def update_course():
         }}
 
         result = db.courses.update_one({"_id": ObjectId(id)}, new_status)
-        if result.matched_count <= 0:
+        if result:
             response = make_response(jsonify({"status": "success"}))
             msg = "Course updated"
             response.set_cookie("msg", msg)
@@ -679,6 +715,41 @@ def update_course():
         
         response = make_response(jsonify({"status": "fail"}))
         msg = "Update failed"
+        response.set_cookie("msg", msg)
+        return response
+    except jwt.ExpiredSignatureError:
+        msg="Your login token has expired"
+        response = make_response(redirect(url_for('login')))
+        response.set_cookie("msg", msg)
+        return response
+    except jwt.exceptions.DecodeError:
+        msg="There was an issue logging you in"
+        response = make_response(redirect(url_for('login')))
+        response.set_cookie("msg", msg)
+        return response
+
+@app.route('/api/delete_course', methods=['POST'])
+def delete_course():
+    token_receive = request.cookies.get("token")
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
+
+        user_info = db.users.find_one({"email": payload["id"]})
+
+        if not user_info["isAdmin"]:
+            return redirect(url_for("home"))
+
+        id = request.form.get("id")
+
+        result = db.courses.delete_one({"_id": ObjectId(id)})
+        if result:
+            response = make_response(redirect(url_for('admin_courses')))
+            msg = "Course deleted"
+            response.set_cookie("msg", msg)
+            return response
+        
+        response = make_response(jsonify({"status": "fail"}))
+        msg = "Delete failed"
         response.set_cookie("msg", msg)
         return response
     except jwt.ExpiredSignatureError:

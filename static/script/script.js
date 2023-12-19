@@ -37,12 +37,13 @@ function formatNum(angka) {
 }
 
 function logout() {
-    $.removeCookie('token', { path: '/' });
     window.location.href = '/';
+    $.removeCookie('token', { path: '/' });
 }
 
 function showAlert() {
-    $('#alertContainer').empty();
+    let alertContainer = $('#alertContainer');
+    alertContainer.empty();
     let msg = $.cookie('msg');
     if (msg) {
         let alertHTML = `
@@ -51,7 +52,7 @@ function showAlert() {
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `;
-        $('#alertContainer').append(alertHTML);
+        alertContainer.append(alertHTML);
         $.removeCookie('msg', { path: '/' });
     }
 }
