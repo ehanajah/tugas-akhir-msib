@@ -436,13 +436,13 @@ def upload_payment():
         unique_filename = str(uuid.uuid4()) + os.path.splitext(payment_file.filename)[1]
         save_to = f'static/payment_files/{unique_filename}'
 
-        registration = db.registrations.find_one({"_id": ObjectId(registration_id)})
+        # registration = db.registrations.find_one({"_id": ObjectId(registration_id)})
 
-        if registration['payment']:
-            old_payment_file = f'static/payment_files/{registration["payment"]}'
+        # if registration['payment']:
+        #     old_payment_file = f'static/payment_files/{registration["payment"]}'
         
-        if os.path.exists(old_payment_file):
-            os.remove(old_payment_file)
+        # if os.path.exists(old_payment_file):
+        #     os.remove(old_payment_file)
         
         payment_file.save(save_to)
 
